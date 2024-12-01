@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/req-quote-wholesale-buyer/static/styles.css">
+</head>
+
+<body background="/req-quote-wholesale-buyer/static/image.png">
+    <!-- Header Section -->
+    <%- include('../partials/header.ejs') %>
+    <main>
+        <section class="quote-request">
+            <h2>Request A Quote</h2>
+            <p>To request a quote for your bulk book order simply complete this short form and we will email you the
+                quote within the next 1 to 24 hours.</p>
+
+            <form id="quote-form">
+                <label for="full-name">Full Name:</label>
+                <input type="text" id="full-name" placeholder="Full Name" required>
+
+                <label for="mobile-number">Mobile Number:</label>
+                <input type="tel" id="mobile-number" placeholder="Mobile Number" required>
+
+                <label for="state">State:</label>
+                <input type="text" id="state" placeholder="State" required>
+
+                <label for="city">City:</label>
+                <input type="text" id="city" placeholder="City">
+
+                <label for="book-title">Book Title:</label>
+                <input type="text" id="book-title" placeholder="Book Title" required>
+
+                <label for="isbn">ISBN:</label>
+                <input type="text" id="isbn" placeholder="ISBN" required>
+
+                <label for="quantity">Quantity Needed:</label>
+                <input type="number" id="quantity" placeholder="Quantity" required>
+
+                <label for="comments">Comments/Requirements:</label>
+                <textarea id="comments" rows="4"></textarea>
+
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </section>
+    </main>
+
+    <%- include('../partials/footer.ejs') %>
+
+    <script>
+        const form = document.getElementById('quote-form'); // Ensure the form has the id 'quote-form'
+    
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = {
+                name: document.getElementById('full-name').value, // Corrected to match backend field
+                email: document.getElementById('mobile-number').value, // Assuming email is mobile number
+                product: document.getElementById('book-title').value, // Corrected to match backend field
+                quantity: document.getElementById('quantity').value,
+                message: document.getElementById('comments').value // Corrected to match backend field
+            };
+    
+            try {
+                const response = await fetch('/api/quote-requests/request-quote', {  // Fixed route here
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Quote request submitted successfully!');
+                } else {
+                    alert(`Error: ${result.message}`); // Show any error message from backend
+                }
+            } catch (error) {
+                alert('Failed to submit the quote request.');
+            }
+        });
+    </script>
+    
+
+</body>
+
+</html>
